@@ -5,9 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { ComponentOverviewComponent } from './component-overview/component-overview.component';
 import { HeroesComponent } from './heroes/heroes.component';
+import { HeroDetailComponent } from './hero-detail/hero-detail.component';
 
 @NgModule({
-  declarations: [AppComponent, ComponentOverviewComponent, HeroesComponent],
+  declarations: [AppComponent, ComponentOverviewComponent, HeroesComponent, HeroDetailComponent],
   imports: [BrowserModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
