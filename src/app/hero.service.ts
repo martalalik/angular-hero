@@ -23,10 +23,17 @@ export class HeroService {
 
   private heroesUrl = 'api/heroes';
 
+  /** GET heroes from the mock data */
+  // getHeroes(): Observable<Hero[]> {
+  //   const heroes = of(HEROES);
+  //   this.messageService.add('HeroService: fetched heroes');
+  //   return heroes;
+  // }
+
+  /** GET heroes from the server */
   getHeroes(): Observable<Hero[]> {
-    const heroes = of(HEROES);
     this.messageService.add('HeroService: fetched heroes');
-    return heroes;
+    return this.hhtp.get<Hero[]>(heroesUrl);
   }
 
   getHero(id: number): Observable<Hero> {
@@ -37,3 +44,7 @@ export class HeroService {
     return of(hero);
   }
 }
+
+/*
+  You've swapped of() for http.get() and the application keeps working without any other changes because both functions return an Observable<Hero[]>.
+*/
