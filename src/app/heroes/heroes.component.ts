@@ -14,12 +14,12 @@ export class HeroesComponent implements OnInit {
   // heroes = HEROES; // -> property
   heroes: Hero[] = []; // -> deklaracja
 
-  getHeroes(): void {
-    this.heroService.getHeroes().subscribe((heroes) => (this.heroes = heroes));
+   // lifecycle hook
+   ngOnInit(): void {
+    this.getHeroes();
   }
 
-  // lifecycle hook
-  ngOnInit(): void {
-    this.getHeroes();
+  getHeroes(): void {
+    this.heroService.getHeroes().subscribe((heroes) => (this.heroes = heroes));
   }
 }
