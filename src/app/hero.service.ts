@@ -48,7 +48,14 @@ export class HeroService {
 /*
   You've swapped of() for http.get() and the application keeps working without any other changes because both functions return an Observable<Hero[]>.
 
-  All HttpClient methods return an RxJS Observable of something.
-  In general, an observable can return more than one value over time. An observable from HttpClient always emits a single value and then completes, never to emit again.
-  This particular call to HttpClient.get() returns an Observable<Hero[]>, which is an observable of hero arrays. In practice, it only returns a single hero array.
+  HttpClient methods return one value:
+
+  - All HttpClient methods return an RxJS Observable of something.
+  - In general, an observable can return more than one value over time. An observable from HttpClient always emits a single value and then completes, never to emit again.
+  - This particular call to HttpClient.get() returns an Observable<Hero[]>, which is an observable of hero arrays. In practice, it only returns a single hero array.
+
+  HttpClient.get() returns response data:
+
+  - HttpClient.get() returns the body of the response as an untyped JSON object by default. Applying the optional type specifier, <Hero[]> , adds TypeScript capabilities, which reduce errors during compile time.
+  - The server's data API determines the shape of the JSON data. The Tour of Heroes data API returns the hero data as an array.
 */
