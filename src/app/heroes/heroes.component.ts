@@ -14,8 +14,8 @@ export class HeroesComponent implements OnInit {
   // heroes = HEROES; // -> property
   heroes: Hero[] = []; // -> deklaracja
 
-   // lifecycle hook
-   ngOnInit(): void {
+  // lifecycle hook
+  ngOnInit(): void {
     this.getHeroes();
   }
 
