@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Hero } from './hero';
@@ -23,7 +24,7 @@ export class HeroService {
 
   private heroesUrl = 'api/heroes';
 
-  /** GET heroes from the mock data */
+  // GET heroes from the mock data
   // getHeroes(): Observable<Hero[]> {
   //   const heroes = of(HEROES);
   //   this.messageService.add('HeroService: fetched heroes');
@@ -33,7 +34,9 @@ export class HeroService {
   /** GET heroes from the server */
   getHeroes(): Observable<Hero[]> {
     this.messageService.add('HeroService: fetched heroes');
-    return this.hhtp.get<Hero[]>(heroesUrl);
+    return this.http
+      .get<Hero[]>(this.heroesUrl)
+      .pipe(catchError(this.handleError<Hero[]>('getHeroes', [])));
   }
 
   getHero(id: number): Observable<Hero> {
@@ -58,4 +61,11 @@ export class HeroService {
 
   - HttpClient.get() returns the body of the response as an untyped JSON object by default. Applying the optional type specifier, <Hero[]> , adds TypeScript capabilities, which reduce errors during compile time.
   - The server's data API determines the shape of the JSON data. The Tour of Heroes data API returns the hero data as an array.
+
+  Error handling:
+
+  - Things go wrong, especially when you're getting data from a remote server. The HeroService.getHeroes() method should catch errors and do something appropriate.
+  - To catch errors, you "pipe" the observable result from http.get() through an RxJS catchError() operator.
+  - The catchError() operator intercepts an Observable that failed. The operator then passes the error to the error handling function.
+  - The following handleError() method reports the error and then returns an innocuous result so that the application keeps working.
 */
