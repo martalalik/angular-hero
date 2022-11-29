@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -10,14 +10,23 @@ import { HeroService } from '../hero.service';
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
 })
-export class HeroDetailComponent {
+export class HeroDetailComponent implements OnInit {
+  hero: Hero | undefined;
+
   constructor(
     private route: ActivatedRoute,
     private heroService: HeroService,
     private location: Location
   ) {}
 
-  @Input() hero?: Hero;
+  ngOnInit() {
+    this.getHero();
+  }
+
+  getHero(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.heroService.getHero(id).subscribe((hero) => (this.hero = hero));
+  }
 }
 
 /**
@@ -26,4 +35,8 @@ export class HeroDetailComponent {
   The HeroService gets hero data from the remote server and this component uses it to get the hero-to-display.
 
   The Location is an Angular service for interacting with the browser. This service lets you navigate back to the previous view.
+
+  The route.snapshot is a static image of the route information shortly after the component was created.
+
+  The paramMap is a dictionary of route parameter values extracted from the URL. The "id" key returns the id of the hero to fetch.
  */
