@@ -91,6 +91,14 @@ export class HeroService {
       catchError(this.handleError<any>('updateHero'))
     );
   }
+
+  /** POST: add a new hero to the server */
+  addHero(hero: Hero): Observable<Hero> {
+    return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
+      catchError(this.handleError<Hero>('addHero'))
+    );
+  }
 }
 
 /*
@@ -120,7 +128,7 @@ export class HeroService {
   - The RxJS tap() operator enables this ability by looking at the observable values, doing something with those values, and passing them along.
   - The tap() call back doesn't access the values themselves.
 
-  updateHero
+  updateHero()
 
   - The HttpClient.put() method takes three parameters:
     - The URL
@@ -128,4 +136,10 @@ export class HeroService {
     - Options
   - The URL is unchanged. The heroes web API knows which hero to update by looking at the hero's id.
   - The heroes web API expects a special header in HTTP save requests. That header is in the httpOptions constant defined in the HeroService.
+
+  addHero()
+
+  - addHero() differs from updateHero() in two ways:
+    - It calls HttpClient.post() instead of put()
+    - It expects the server to create an id for the new hero, which it returns in the Observable<Hero> to the caller
 */
