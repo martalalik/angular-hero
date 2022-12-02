@@ -33,10 +33,10 @@ export class HeroService {
 
   /** GET heroes from the server */
   getHeroes(): Observable<Hero[]> {
-    this.messageService.add('HeroService: fetched heroes');
-    return this.http
-      .get<Hero[]>(this.heroesUrl)
-      .pipe(catchError(this.handleError<Hero[]>('getHeroes', [])));
+    return this.http.get<Hero[]>(this.heroesUrl).pipe(
+      tap((_) => this.log('fetched heroes')),
+      catchError(this.handleError<Hero[]>('getHeroes', []))
+    );
   }
 
   /**
@@ -88,4 +88,10 @@ export class HeroService {
   - To catch errors, you "pipe" the observable result from http.get() through an RxJS catchError() operator.
   - The catchError() operator intercepts an Observable that failed. The operator then passes the error to the error handling function.
   - The following handleError() method reports the error and then returns an innocuous result so that the application keeps working.
+
+  Tap into the Observable
+
+  - The HeroService methods taps into the flow of observable values and send a message, using the log() method, to the message area at the bottom of the page.
+  - The RxJS tap() operator enables this ability by looking at the observable values, doing something with those values, and passing them along.
+  - The tap() call back doesn't access the values themselves.
 */
