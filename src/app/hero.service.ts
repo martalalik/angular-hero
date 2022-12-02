@@ -4,7 +4,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Hero } from './hero';
-import { HEROES } from './mock-heroes';
+// import { HEROES } from './mock-heroes';
 import { MessageService } from './message.service';
 
 @Injectable({
@@ -79,6 +79,18 @@ export class HeroService {
        */
     );
   }
+
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  };
+
+  /** PUT: update the hero on the server */
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap((_) => this.log(`updated hero id=${hero.id}`)),
+      catchError(this.handleError<any>('updateHero'))
+    );
+  }
 }
 
 /*
@@ -107,4 +119,13 @@ export class HeroService {
   - The HeroService methods taps into the flow of observable values and send a message, using the log() method, to the message area at the bottom of the page.
   - The RxJS tap() operator enables this ability by looking at the observable values, doing something with those values, and passing them along.
   - The tap() call back doesn't access the values themselves.
+
+  updateHero
+
+  - The HttpClient.put() method takes three parameters:
+    - The URL
+    - The data to update, which is the modified hero in this case
+    - Options
+  - The URL is unchanged. The heroes web API knows which hero to update by looking at the hero's id.
+  - The heroes web API expects a special header in HTTP save requests. That header is in the httpOptions constant defined in the HeroService.
 */
