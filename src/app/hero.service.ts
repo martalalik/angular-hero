@@ -108,36 +108,52 @@ export class HeroService {
       catchError(this.handleError<Hero>('deleteHero'))
     );
   }
+
+  /* GET heroes whose name contains search term */
+  searchHeroes(term: string): Observable<Hero[]> {
+    if (!term.trim()) {
+      // if not search term, return empty hero array.
+      return of([]);
+    }
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+      tap((x) =>
+        x.length
+          ? this.log(`found heroes matching "${term}"`)
+          : this.log(`no heroes matching "${term}"`)
+      ),
+      catchError(this.handleError<Hero[]>('searchHeroes', []))
+    );
+  }
 }
 
 /*
-  You've swapped of() for http.get() and the application keeps working without any other changes because both functions return an Observable<Hero[]>.
+  * You've swapped of() for http.get() and the application keeps working without any other changes because both functions return an Observable<Hero[]>.
 
-  HttpClient methods return one value:
+  * just HttpClient methods return one value:
 
   - All HttpClient methods return an RxJS Observable of something.
   - In general, an observable can return more than one value over time. An observable from HttpClient always emits a single value and then completes, never to emit again.
   - This particular call to HttpClient.get() returns an Observable<Hero[]>, which is an observable of hero arrays. In practice, it only returns a single hero array.
 
-  HttpClient.get() returns response data:
+  * HttpClient.get() returns response data:
 
   - HttpClient.get() returns the body of the response as an untyped JSON object by default. Applying the optional type specifier, <Hero[]> , adds TypeScript capabilities, which reduce errors during compile time.
   - The server's data API determines the shape of the JSON data. The Tour of Heroes data API returns the hero data as an array.
 
-  Error handling:
+  * Error handling:
 
   - Things go wrong, especially when you're getting data from a remote server. The HeroService.getHeroes() method should catch errors and do something appropriate.
   - To catch errors, you "pipe" the observable result from http.get() through an RxJS catchError() operator.
   - The catchError() operator intercepts an Observable that failed. The operator then passes the error to the error handling function.
   - The following handleError() method reports the error and then returns an innocuous result so that the application keeps working.
 
-  Tap into the Observable
+  * Tap into the Observable
 
   - The HeroService methods taps into the flow of observable values and send a message, using the log() method, to the message area at the bottom of the page.
   - The RxJS tap() operator enables this ability by looking at the observable values, doing something with those values, and passing them along.
   - The tap() call back doesn't access the values themselves.
 
-  updateHero()
+  * updateHero()
 
   - The HttpClient.put() method takes three parameters:
     - The URL
@@ -146,13 +162,13 @@ export class HeroService {
   - The URL is unchanged. The heroes web API knows which hero to update by looking at the hero's id.
   - The heroes web API expects a special header in HTTP save requests. That header is in the httpOptions constant defined in the HeroService.
 
-  addHero()
+  * addHero()
 
   - addHero() differs from updateHero() in two ways:
     - It calls HttpClient.post() instead of put()
     - It expects the server to create an id for the new hero, which it returns in the Observable<Hero> to the caller
 
-  deleteHero()
+  * deleteHero()
 
   - deleteHero() calls HttpClient.delete()
   - The URL is the heroes resource URL plus the id of the hero to delete
